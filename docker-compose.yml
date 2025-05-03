@@ -1,15 +1,11 @@
-version: '3.8'
-
 services:
   app:
     build: .
     ports:
       - "5000:5000"
-    depends_on:
-      - db
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/todo_db
-      - SECRET_KEY=your_secret_key
+      - SECRET_KEY=49839c72749ca2b51ca5eb2c119c67be86aeb6972653f74ac9f2dfe7d4cafb8d
+      - DATABASE_URL=postgresql://postgres:a@host.docker.internal:5432/todo_app
     volumes:
       - .:/app
     restart: always
@@ -19,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=a
       - POSTGRES_USER=postgres
       - POSTGRES_DB=todo_db
     ports:

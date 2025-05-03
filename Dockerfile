@@ -1,29 +1,23 @@
-FROM python:3.13.1-slim
+FROM python:3.11-slim
 
-ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-    libpq-dev gcc \
+    libpq-dev gcc postgresql-client \
     && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Make the entry point script executable
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 5000
 
-CMD ["python", "app.py"]
-
-# # Set the working directory
-# WORKDIR /app
-# # Copy the everything into the container at /app
-# COPY . /app
-# # Install dependencies
-# RUN pip install --no-cache-dir -r requirements.txt
-# # Expose the port the app runs on
-# EXPOSE 5000
-# # Run the application
-# CMD ["python", "app.py"]
+# Use our entrypoint script that waits for the DB
+ENTRYPOINT ["/app/entrypoint.sh"]
