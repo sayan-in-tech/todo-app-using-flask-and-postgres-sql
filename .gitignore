@@ -1,0 +1,4 @@
+instance/
+.env
+todo-app
+__pycache__/

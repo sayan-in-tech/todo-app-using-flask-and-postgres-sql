@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Todo App</h1>
+    
+    <form hx-post="{{ url_for('create_todo') }}" hx-target="#todo-list" hx-swap="afterbegin">
+        <input type="text" name="title" placeholder="Add a new todo..." required>
+        <button type="submit">Add</button>
+    </form>
+    
+    <div id="todo-list">
+        {% for todo in todos %}
+            {% include "todo/todo_item.html" %}
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<div class="todo-item {% if todo.completed %}completed{% endif %}">
+    <span>{{ todo.title }}</span><br>
+    <span>Created: {{ todo.created_at.strftime('%Y-%m-%d %H:%M') }}</span><br>
+    <span>Updated: {{ todo.updated_at.strftime('%Y-%m-%d %H:%M') }}</span><br>
+    <button class="delete-btn" 
+            hx-delete="{{ url_for('todo.delete_todo', todo_id=todo.id) }}" 
+            hx-target="closest .todo-item" 
+            hx-swap="outerHTML">
+        X
+    </button>
+    <button class="complete-btn" 
+            hx-put="{{ url_for('todo.toggle_todo', todo_id=todo.id) }}" 
+            hx-target="closest .todo-item" 
+            hx-swap="outerHTML">
+        {% if todo.completed %}Undo{% else %}Complete{% endif %}
+    </button>
+
+    <button class="edit-btn" onclick="openEditPopup('popup-{{ todo.id }}')">
+        Edit
+    </button>
+    
+    <div id="popup-{{ todo.id }}" class="popup-container" style="display: none;">
+        <div class="popup-content">
+            <form class="todo-update-form"
+                hx-put="{{ url_for('todo.update_todo', todo_id=todo.id) }}"
+                hx-target="closest .todo-item"
+                hx-swap="outerHTML"
+                onsubmit="closeEditPopup('popup-{{ todo.id }}')">
+                <h3>Edit Todo</h3>
+                <input type="text" name="title" value="{{ todo.title }}" required>
+                <div class="popup-buttons">
+                    <button type="submit">Update</button>
+                    <button type="button" class="cancel-btn" 
+                            onclick="closeEditPopup('popup-{{ todo.id }}')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
